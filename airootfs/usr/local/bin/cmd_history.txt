@@ -1,0 +1,4 @@
+1742945478.0331986 ['/usr/bin/systemd-detect-virt']
+1742945478.0375516 ['/usr/bin/systemd-detect-virt']
+1742945478.041944 ['/usr/bin/lspci']
+1742945478.0537899 ['/usr/bin/lsblk', '--json', '--bytes', '--output', 'name,path,pkname,log-sec,size,pttype,ptuuid,rota,tran,partn,partuuid,parttype,uuid,fstype,fsver,fsavail,fsuse%,type,mountpoint,mountpoints,fsroots']
