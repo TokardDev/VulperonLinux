@@ -4,4 +4,4 @@ if grep -Fqa 'accessibility=' /proc/cmdline &> /dev/null; then
 fi
 
 ~/.automated_script.sh
-~/install-script.py
+~/.install-scripts/install-script.py

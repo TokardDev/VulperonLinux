@@ -205,9 +205,11 @@ def run_archinstall():
     subprocess.run([
         "archinstall",
         "--script", "vulperon-archiso",
-        "--config", ".user_configuration.json",
-        "--creds", ".user_credentials.json"
+        "--config", "/root/.install-scripts/user_configuration.json",
+        "--creds", "/root/.install-scripts/user_credentials.json"
     ])
+    subprocess.run(["/root/.install-scripts/move-configs.sh"])
+    subprocess.run(["/root/.install-scripts/post-install.sh"])
     print("Installation Complete !")
 
 

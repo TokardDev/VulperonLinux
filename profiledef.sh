@@ -24,5 +24,8 @@ file_permissions=(
   ["/usr/local/bin/choose-mirror"]="0:0:755"
   ["/usr/local/bin/Installation_guide"]="0:0:755"
   ["/usr/local/bin/livecd-sound"]="0:0:755"
-  ["/root/install-script.py"]="0:0:755"
+  ["/root/.install-scripts/install-script.py"]="0:0:755"
+  ["/root/.install-scripts/move-configs.sh"]="0:0:755"
+  ["/root/.install-scripts/post-install.sh"]="0:0:755"
+  ["/vulperon/root/finalize.sh"]="0:0:755"
 )
