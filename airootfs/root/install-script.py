@@ -181,7 +181,7 @@ def menu(stdscr, network_connected):
 
     while True:
         stdscr.addstr(0, 2, "Welcome! I'm Vulperon Installer!", curses.A_BOLD)
-        stdscr.addstr(1, 2, "First, let's configure some settings!")
+        stdscr.addstr(1, 2, "Now, let's configure some settings!")
 
         for idx, option in enumerate(options):
             style = curses.A_REVERSE if idx == selected else curses.A_NORMAL
