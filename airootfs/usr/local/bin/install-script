@@ -1,5 +1,0 @@
-#!/bin/sh
-
-echo "Welcome ! I'm Vulperine Installer !"
-echo "First, I'm going to let you select some settings !"
-archinstall vulperine-archiso
