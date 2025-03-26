@@ -72,9 +72,10 @@ def select_network(stdscr, device):
     stdscr.clear()
     stdscr.refresh()
     selected = 0
-    networks = get_available_networks()
-    networks.append("Back")
-    networks.append("Exit")
+    #networks = get_available_networks()
+    networks = ["wifi1", "wifi2", "wifi3"]
+    networks.append("Back (interface selection)")
+    networks.append("Return to installer")
     
     while True:
         stdscr.addstr(0, 2, "Please select your network", curses.A_BOLD)
@@ -83,6 +84,8 @@ def select_network(stdscr, device):
 
         for idx, option in enumerate(networks):
             style = curses.A_REVERSE if idx == selected else curses.A_NORMAL
+            if idx >= len(networks)-2:
+                idx+=1
             stdscr.addstr(idx + 2, 4, f" {option} ", style)
             number_lines = idx+2
 
@@ -94,9 +97,11 @@ def select_network(stdscr, device):
             selected = (selected + 1) % len(networks)  # Aller à l'option suivante
         elif key in [curses.KEY_ENTER, 10, 13]:
             if selected == len(networks)-1:
-                print("exit")
+                stdscr.clear()
+                menu(stdscr, check_network())
             elif selected == len(networks)-2:
-                print("Back")
+                stdscr.clear()
+                return False
             else:
                 try:
                     
@@ -104,7 +109,8 @@ def select_network(stdscr, device):
                     #subprocess.run(["iwctl", "station", device, "connect", networks[selected], "--passphrase", user_input ], capture_output=True, text=True, check=True)
                     print(user_input)
                     if check_network_true():
-                        main()
+                        stdscr.clear()
+                        menu(stdscr, check_network())
                     else:
                         stdscr.addstr(number_lines +3, 2, "Possibly wrong password !", curses.A_BOLD)
                 except subprocess.CalledProcessError as e:
@@ -123,15 +129,17 @@ def network_menu(stdscr):
     stdscr.clear()
     stdscr.refresh()
     selected = 0
-    buttons = get_available_devices()
-    buttons.append("Back")
-    buttons.append("Exit")
+    #buttons = get_available_devices()
+    buttons = ["interface","2"]
+    buttons.append("Back to installer")
 
     while True:
         stdscr.addstr(0, 2, "Please select your interface", curses.A_BOLD)
 
         for idx, option in enumerate(buttons):
             style = curses.A_REVERSE if idx == selected else curses.A_NORMAL
+            if idx == len(buttons)-1:
+                idx+=1
             stdscr.addstr(idx + 2, 4, f" {option} ", style)
 
         key = stdscr.getch()
@@ -142,10 +150,10 @@ def network_menu(stdscr):
             selected = (selected + 1) % len(buttons)  # Aller à l'option suivante
         elif key in [curses.KEY_ENTER, 10, 13]:
             if selected == len(buttons)-1:
-                print("exit")
-            elif selected == len(buttons)-2:
-                print("Back")
+                stdscr.clear()
+                return
             else:
+                stdscr.clear()
                 select_network(stdscr, buttons[selected])
                 
         
@@ -163,16 +171,16 @@ def menu(stdscr, network_connected):
 
     # Vérifie si le réseau est connecté
     if network_connected:
-            stdscr.addstr(3, 2, "Network: ✅ Connected")
+            stdscr.addstr(3, 2, "Network: Connected")
     else:
-        stdscr.addstr(3, 2, "Network: ❌ Not connected")
+        stdscr.addstr(3, 2, "Network: Not connected")
         stdscr.addstr(4, 2, "Your network isn't working! Please connect your computer to the internet.")
         options.insert(0, "Connect Wifi")
 
     selected = 0
 
     while True:
-        stdscr.addstr(0, 2, "Welcome! I'm Vulperine Installer!", curses.A_BOLD)
+        stdscr.addstr(0, 2, "Welcome! I'm Vulperon Installer!", curses.A_BOLD)
         stdscr.addstr(1, 2, "First, let's configure some settings!")
 
         for idx, option in enumerate(options):
@@ -186,6 +194,7 @@ def menu(stdscr, network_connected):
         elif key == curses.KEY_DOWN:
             selected = (selected + 1) % len(options)  # Aller à l'option suivante
         elif key in [curses.KEY_ENTER, 10, 13]:
+            stdscr.clear()
             return selected
 
 
@@ -195,10 +204,11 @@ def run_archinstall():
     """
     subprocess.run([
         "archinstall",
-        "--script", "vulperine-archiso",
+        "--script", "vulperon-archiso",
         "--config", ".user_configuration.json",
         "--creds", ".user_credentials.json"
     ])
+    print("Installation Complete !")
 
 
 def main():
@@ -216,6 +226,7 @@ def main():
         # Si le réseau n'est pas connecté, lance le menu de configuration réseau
         print("\nOpening network configuration...")
         curses.wrapper(network_menu)
+        main()
     else:
         # Quitte l'installateur
         print("\nExiting installer.")
