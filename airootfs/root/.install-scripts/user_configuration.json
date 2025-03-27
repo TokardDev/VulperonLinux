@@ -69,11 +69,11 @@
     },
     "ntp": true,
     "packages": [
-    "gnome-shell", "gdm", "networkmanager", "gnome-console", "gnome-control-center", 
+    "gnome-shell", "gdm", "iwd", "gnome-console", "gnome-control-center", 
     "gnome-keyring", "xdg-user-dirs-gtk", "gnome-calculator", "gnome-calendar", 
     "gnome-text-editor", "totem", "gnome-system-monitor", "gnome-logs", "gnome-software", 
     "loupe", "gnome-shell-extensions", "nautilus", "gnome-font-viewer", "baobab", 
-    "gnome-disk-utility", "gnome-clocks", "flatpak"
+    "gnome-disk-utility", "gnome-clocks", "flatpak", "nano", "wget", "wireless_tools", "wpa_supplicant", "smartmontools", "gnome-tweaks"
     ],
     "parallel downloads": 0,
     "profile_config": null,
