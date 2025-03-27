@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+#!/bin/python
 
 import curses
 import subprocess
+import os
 
 current_menu = "main"
 interface = None
@@ -35,10 +36,16 @@ def get_available_devices(): # not tested yet
         return []
 
 
-def run_archinstall():
+def run_archinstall(stdscr):
     """
     Lance l'installation d'Arch Linux avec les paramètres spécifiés.
     """
+    global current_menu
+
+    curses.def_prog_mode()
+    curses.endwin()
+
+
     subprocess.run([
         "archinstall",
         "--script", "vulperon-archiso",
@@ -47,8 +54,12 @@ def run_archinstall():
     ])
     subprocess.run(["/root/.install-scripts/move-configs.sh"])
     subprocess.run(["/root/.install-scripts/post-install.sh"])
-    subprocess.run(["/root/.install-scripts/finalize-install.py"])
-    print("Installation Complete !")
+    subprocess.run(["python3", "/root/.install-scripts/finalize-install.py"])
+    subprocess.run("clear", shell=True, check=True)
+    print("Installation done ! Please type \"reboot\" in your terminal to boot into your new system !")
+    curses.reset_prog_mode()
+    stdscr.refresh()
+
 
 
 def get_available_networks(device): # not tested yet
@@ -189,7 +200,10 @@ def menu_main(stdscr):
             if selected == len(options)-1:
                 current_menu = "exit"
             elif selected == len(options)-2:
-                run_archinstall()
+                curses.curs_set(0) 
+                stdscr.clear()
+                stdscr.refresh()
+                current_menu = "install"
             else:
                 current_menu = "interfaces"
 
@@ -206,7 +220,13 @@ def main(stdscr):
         elif current_menu == "wifi":
             menu_wifi(stdscr)
         elif current_menu == "exit":
-            return
+            break
+        elif current_menu == "install":
+            stdscr.addstr(0, 0, "")
+            stdscr.clear()
+            stdscr.refresh()
+            run_archinstall(stdscr)
+            break
 
 
 curses.wrapper(main)

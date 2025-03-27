@@ -5,4 +5,5 @@ if [ ! -d "/mnt/archinstall" ]; then
     exit 1
 fi
 
+arch-chroot /mnt/archinstall pacman -Syu
 arch-chroot /mnt/archinstall /bin/bash -c "/root/finalize.sh"

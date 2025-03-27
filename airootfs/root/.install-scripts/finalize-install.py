@@ -1,5 +1,8 @@
+#!/bin/python
+
 import curses
 import subprocess
+import os
 
 current_menu = "main"
 pacman_packages = []
@@ -43,11 +46,10 @@ def menu_gpu(stdscr):
 
     # Définition des options de GPU et leurs paquets associés
     gpu_options = [
-        ("Mesa (Open Source)", False, "mesa"),  # Paquet pour Mesa
-        ("NVIDIA Proprietary (Recommended for NVIDIA)", False, "nvidia"),  # Paquet pour NVIDIA propriétaire
-        ("Nouveau (NVIDIA Open Source)", False, "nouveau-dri"),  # Paquet pour Nouveau
-        ("AMD (Open Source)", False, "xf86-video-amdgpu"),  # Paquet pour AMD
-        ("Intel (Open Source)", False, "xf86-video-intel")  # Paquet pour Intel
+        ("Mesa (Open Source)", False, "mesa lib32-mesa lib32-mesa"),  # Paquet pour Mesa
+        ("NVIDIA Proprietary (Recommended for NVIDIA)", False, "nvidia nvidia-utils lib32-nvidia-utils"),  # Paquet pour NVIDIA propriétaire
+        ("AMD (Open Source)", False, "xf86-video-amdgpu mesa lib32-mesa vulkan-radeon"),  # Paquet pour AMD
+        ("Intel (Open Source)", False, "xf86-video-intel mesa lib32-mesa vulkan-intel")  # Paquet pour Intel
     ]
     
     curses.curs_set(0)  # Cache le curseur
@@ -98,7 +100,6 @@ def menu_packages(stdscr):
         ("Visual Studio Code (Open Source Arch)", False, "code"),
         ("VirtManager & Qemu", False, "virt-manager qemu-full"),
         ("Firefox", False, "firefox"),
-        ("VLC", False, "vlc"),
         ("GIMP", False, "gimp"),
         ("Audacity", False, "audacity"),
         ("Chromium", False, "chromium"),
@@ -155,7 +156,6 @@ def menu_flatpak(stdscr):
         ("GitHub Desktop", False, "io.github.shiftey.Desktop"),
         ("Brave Browser", False, "com.brave.Browser"),
         ("Deezer", False, "dev.aunetx.deezer"),
-        ("Spotify", False, "com.spotify.Client"),
         ("Telegram", False, "org.telegram.desktop"),
         ("Materialgram (Telegram client)", False, "io.github.kukuruzka165.materialgram")
     ]
@@ -235,33 +235,44 @@ def menu_install(stdscr):
             selected = (selected + 1) % len(options)
         elif key in [curses.KEY_ENTER, 10, 13]:
             if selected == 1:  # Si l'utilisateur choisit "Oui"
-                # Commande d'installation pour pacman
-                pacman_command = f"pacman -S --noconfirm {' '.join(pacman_packages + pacman_packages_gpu)}"
-                
-                # Commande d'installation pour flatpak
-                flatpak_command = f"flatpak install --assumeyes {' '.join(flatpak_packages)}"
-
-                # Exécution des commandes dans le chroot
-                try:
-                    # Installation des paquets Pacman dans le chroot
-                    subprocess.run(f"arch-chroot /mnt/archinstall {pacman_command}", shell=True, check=True)
-
-                    # Installation des applications Flatpak dans le chroot
-                    subprocess.run(f"arch-chroot /mnt/archinstall {flatpak_command}", shell=True, check=True)
-
-                    print("Packages installed successfully.")
-                except subprocess.CalledProcessError as e:
-                    print(f"Error during installation: {e}")
-                
-                sys.exit()
+                current_menu = "installing"
             else:
                 current_menu = "main"
 
-            stdscr.clear()
-            stdscr.refresh()
-            break
-
         stdscr.refresh()
+
+
+def installing(stdscr):
+
+    curses.def_prog_mode()
+    curses.endwin()
+
+    # Commande d'installation pour pacman
+    pacman_command = f"pacman -S --noconfirm {' '.join(pacman_packages + pacman_packages_gpu)}"
+    # Commande d'installation pour flatpak
+    flatpak_command = f"flatpak install --assumeyes {' '.join(flatpak_packages)}"
+
+    # Exécution des commandes dans le chroot
+    try:
+    # Installation des paquets Pacman dans le chroot
+        if len(pacman_packages) != 0 and len(pacman_packages_gpu) != 0:
+            subprocess.run(f"arch-chroot /mnt/archinstall {pacman_command}", shell=True, check=True)
+
+        if len(flatpak_packages) != 0:
+            subprocess.run(f"arch-chroot /mnt/archinstall {flatpak_command}", shell=True, check=True)
+
+        print("Packages installed successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during installation: {e}")
+    curses.reset_prog_mode()
+    stdscr.refresh()
+    subprocess.run("clear", shell=True, check=True)
+    print("Additions installed :3")
+    print('Do you want to reboot now? [Y/n]')
+    choice = input('Do you want to reboot now? [Y/n] ').strip().lower()
+    if choice in ('y', ''):
+        os.system('reboot')
+    return
 
 
 def main(stdscr):
@@ -280,6 +291,10 @@ def main(stdscr):
             menu_install(stdscr)
         elif current_menu == "exit":
             return
+        elif current_menu == "installing":
+            installing(stdscr)
+            return
 
+            
 
 curses.wrapper(main)

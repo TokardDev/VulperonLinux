@@ -2,10 +2,10 @@
 # shellcheck disable=SC2034
 
 iso_name="vulperon"
-iso_label="vulperon_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
+iso_label="vulperon_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%d.%m.%y_%H%M)"
 iso_publisher="Tokard <https://tokard.dev>"
 iso_application="vulperon Linux Live/Rescue DVD"
-iso_version="$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y.%m.%d)"
+iso_version="$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y.%m.%d_%y_%H%M)"
 install_dir="vulperon"
 buildmodes=('iso')
 bootmodes=('bios.syslinux.mbr' 'bios.syslinux.eltorito'
