@@ -2,10 +2,10 @@
 # shellcheck disable=SC2034
 
 iso_name="vulperon"
-iso_label="vulperon_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%d.%m.%y_%H%M)"
+iso_label="vulperon_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%d.%m.%y)"
 iso_publisher="Tokard <https://tokard.dev>"
 iso_application="vulperon Linux Live/Rescue DVD"
-iso_version="$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y.%m.%d_%y_%H%M)"
+iso_version="$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%d.%m.%Y)"
 install_dir="vulperon"
 buildmodes=('iso')
 bootmodes=('bios.syslinux.mbr' 'bios.syslinux.eltorito'
@@ -28,5 +28,6 @@ file_permissions=(
   ["/root/.install-scripts/move-configs.sh"]="0:0:755"
   ["/root/.install-scripts/post-install.sh"]="0:0:755"
   ["/vulperon/root/finalize.sh"]="0:0:755"
+  ["/vulperon/root/post-app-install.sh"]="0:0:755"
   ["/root/.install-scripts/finalize-install.py"]="0:0:755"
 )

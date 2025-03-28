@@ -7,3 +7,4 @@ fi
 
 arch-chroot /mnt/archinstall pacman -Syu
 arch-chroot /mnt/archinstall /bin/bash -c "/root/finalize.sh"
+arch-chroot /mnt/archinstall /bin/bash -c "/root/post-app-install.sh"

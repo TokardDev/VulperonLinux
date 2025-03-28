@@ -268,10 +268,6 @@ def installing(stdscr):
     stdscr.refresh()
     subprocess.run("clear", shell=True, check=True)
     print("Additions installed :3")
-    print('Do you want to reboot now? [Y/n]')
-    choice = input('Do you want to reboot now? [Y/n] ').strip().lower()
-    if choice in ('y', ''):
-        os.system('reboot')
     return
 
 

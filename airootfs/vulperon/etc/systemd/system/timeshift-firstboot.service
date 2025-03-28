@@ -1,0 +1,11 @@
+[Unit]
+Description=Exécuter Timeshift après l'installation
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/timeshift --create --comments "Post installation snapshot"
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

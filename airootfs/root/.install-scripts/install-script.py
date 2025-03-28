@@ -56,7 +56,6 @@ def run_archinstall(stdscr):
     subprocess.run(["/root/.install-scripts/post-install.sh"])
     subprocess.run(["python3", "/root/.install-scripts/finalize-install.py"])
     subprocess.run("clear", shell=True, check=True)
-    print("Installation done ! Please type \"reboot\" in your terminal to boot into your new system !")
     curses.reset_prog_mode()
     stdscr.refresh()
 
@@ -226,6 +225,7 @@ def main(stdscr):
             stdscr.clear()
             stdscr.refresh()
             run_archinstall(stdscr)
+            print("Installation done ! Please type \"reboot\" in your terminal to boot into your new system !")
             break
 
 
