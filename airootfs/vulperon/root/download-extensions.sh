@@ -37,7 +37,8 @@ for ID_EXTENSION in "${EXTENSIONS_LIST[@]}"; do
         
         if [ -f "$SCHEMA_FILE" ]; then
             echo "Modifying schema for extension $ID_EXTENSION..."
-            # Remplacer "gnome-terminal" par "kgx" dans le fichier XML
+
+            # Replace "gnome-terminal" with "kgx" in the XML file
             sudo sed -i 's/gnome-terminal/kgx/g' "$SCHEMA_FILE"
         else
             echo "Schema file not found for extension $ID_EXTENSION"
@@ -49,7 +50,7 @@ for ID_EXTENSION in "${EXTENSIONS_LIST[@]}"; do
         glib-compile-schemas "$EXT_DIR/schemas"
     fi
 
-    # Ajouter à la liste des extensions activées
+    # Add to the list of enabled extensions
     if [[ "$CURRENT_EXTENSIONS" != *"$UUID"* ]]; then
         CURRENT_EXTENSIONS="['$UUID', ${CURRENT_EXTENSIONS// /}]"
     fi

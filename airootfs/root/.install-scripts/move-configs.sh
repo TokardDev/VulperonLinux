@@ -3,11 +3,12 @@
 cp -r -f /vulperon/* /mnt/archinstall/
 rm -r /mnt/archinstall/usr/share/pixmaps/archlinux*
 
-# Vérifier si le déplacement a réussi
+# Check if the move was successful
 if [ $? -eq 0 ]; then
-    echo "Déplacement terminé avec succès."
+    echo "Move completed successfully."
 else
-    echo "Erreur lors du déplacement."
+    echo "Error during the move."
     exit 1
 fi
+
 

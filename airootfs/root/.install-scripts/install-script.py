@@ -7,6 +7,10 @@ import os
 current_menu = "main"
 interface = None
 
+
+# ======= Functions =======
+
+
 def check_network():
     try:
         subprocess.run(
@@ -15,7 +19,7 @@ def check_network():
             stderr=subprocess.DEVNULL,
             check=True
         )
-        return True  # OK
+        return True
     except subprocess.CalledProcessError:
         return False 
 
@@ -27,7 +31,7 @@ def get_available_devices(): # not tested yet
         lines = result.stdout.splitlines()
 
         for line in lines[4:]:
-            device = line.split()[0]  # get interfa
+            device = line.split()[0]
             devices.append(device)
 
         return devices
@@ -37,14 +41,10 @@ def get_available_devices(): # not tested yet
 
 
 def run_archinstall(stdscr):
-    """
-    Lance l'installation d'Arch Linux avec les paramètres spécifiés.
-    """
     global current_menu
 
     curses.def_prog_mode()
     curses.endwin()
-
 
     subprocess.run([
         "archinstall",
@@ -52,13 +52,12 @@ def run_archinstall(stdscr):
         "--config", "/root/.install-scripts/user_configuration.json",
         "--creds", "/root/.install-scripts/user_credentials.json"
     ])
-    subprocess.run(["/root/.install-scripts/move-configs.sh"])
-    subprocess.run(["/root/.install-scripts/post-install.sh"])
-    subprocess.run(["python3", "/root/.install-scripts/finalize-install.py"])
+    subprocess.run(["/root/.install-scripts/move-configs.sh"]) # move files to new system
+    subprocess.run(["/root/.install-scripts/post-install.sh"]) # execute scripts in chroot, maybe can be merged with above script ? 
+    subprocess.run(["python3", "/root/.install-scripts/finalize-install.py"]) # mostly systemctl related, update dconf
     subprocess.run("clear", shell=True, check=True)
     curses.reset_prog_mode()
     stdscr.refresh()
-
 
 
 def get_available_networks(device): # not tested yet
@@ -71,6 +70,9 @@ def get_available_networks(device): # not tested yet
         network = line.split()[0] # get network name
         networks.append(network)
     return networks
+
+
+# ======= Menus =======
 
 
 def menu_wifi(stdscr):
@@ -99,17 +101,22 @@ def menu_wifi(stdscr):
 
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(networks)  # Aller à l'option précédente
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(networks)  # Aller à l'option suivante
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            if selected == len(networks)-1:
-                current_menu = "main"
-            elif selected == len(networks)-2:
-                current_menu = "interfaces"
-            else:
-                menu_password(stdscr, networks[selected])
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(networks)
+
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(networks) 
+
+            case curses.KEY_ENTER | 10 | 13: 
+                match selected:
+                    case len(networks) - 1:
+                        current_menu = "main" # button return to installer
+                    case len(networks) - 2:
+                        current_menu = "interfaces" # button "back"
+                    case _:
+                        menu_password(stdscr, networks[selected])
+
 
 def menu_password(stdscr, ssid, wrong_password=False):
     global current_screen, interface
@@ -121,10 +128,11 @@ def menu_password(stdscr, ssid, wrong_password=False):
     curses.echo()
     
     stdscr.refresh()
-    password = stdscr.getstr(2, 2, 20).decode('utf-8')  # Lire le mot de passe
+    password = stdscr.getstr(2, 2, 20).decode('utf-8')
 
     curses.noecho()
-    #subprocess.run(["iwctl", "station", interface, "connect", ssid, "--passphrase", password ], capture_output=True, text=True, check=True)
+    subprocess.run(["iwctl", "station", interface, "connect", ssid, "--passphrase", password ], capture_output=True, text=True, check=True)
+
     if check_network():
         current_menu = "main"
     else:
@@ -139,7 +147,6 @@ def menu_interfaces(stdscr):
     stdscr.refresh()
     selected = 0
     buttons = get_available_devices()
-    #buttons = ["wifi","ethernet"]
     buttons.append("Back to installer")
 
     while current_menu == "interfaces":
@@ -153,16 +160,24 @@ def menu_interfaces(stdscr):
 
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(buttons)  # Aller à l'option précédente
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(buttons)  # Aller à l'option suivante
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            if selected == len(buttons)-1:
-                current_menu = "main"
-            else:
-                interface = buttons[selected]
-                current_menu = "wifi"
+        key = stdscr.getch()
+
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(buttons)
+
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(buttons)
+
+            case curses.KEY_ENTER | 10 | 13:
+                match selected:
+                    case len(buttons) - 1:
+                        current_menu = "main"
+
+                    case _:
+                        interface = buttons[selected] 
+                        current_menu = "wifi"
+
 
 
 def menu_main(stdscr):
@@ -191,42 +206,54 @@ def menu_main(stdscr):
 
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(options) 
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(options)
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            if selected == len(options)-1:
-                current_menu = "exit"
-            elif selected == len(options)-2:
-                curses.curs_set(0) 
-                stdscr.clear()
-                stdscr.refresh()
-                current_menu = "install"
-            else:
-                current_menu = "interfaces"
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(options)
 
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(options)
+
+            case curses.KEY_ENTER | 10 | 13:
+                match selected:
+                    case len(options) - 1:
+                        current_menu = "exit"
+
+                    case len(options) - 2:
+                        curses.curs_set(0)
+                        stdscr.clear()
+                        stdscr.refresh()
+                        current_menu = "install"
+
+                    case _:
+                        current_menu = "interfaces"
+
+
+# ======= Main Loop =======
 
 
 def main(stdscr):
     global current_menu
 
     while True:
-        if current_menu == "main":
-            menu_main(stdscr)
-        elif current_menu == "interfaces":
-            menu_interfaces(stdscr)
-        elif current_menu == "wifi":
-            menu_wifi(stdscr)
-        elif current_menu == "exit":
-            break
-        elif current_menu == "install":
-            stdscr.addstr(0, 0, "")
-            stdscr.clear()
-            stdscr.refresh()
-            run_archinstall(stdscr)
-            print("Installation done ! Please type \"reboot\" in your terminal to boot into your new system !")
-            break
+        match current_menu:
+            case "main":
+                menu_main(stdscr)
+
+            case "interfaces":
+                menu_interfaces(stdscr)
+
+            case "wifi":
+                menu_wifi(stdscr)
+
+            case "exit":
+                break
+
+            case "install":
+                stdscr.clear()
+                stdscr.refresh()
+                run_archinstall(stdscr)
+                print("Installation done! Please type \"reboot\" in your terminal to boot into your new system!")
+                break
 
 
 curses.wrapper(main)

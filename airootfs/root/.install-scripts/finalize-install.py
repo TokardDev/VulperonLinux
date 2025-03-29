@@ -9,6 +9,40 @@ pacman_packages = []
 pacman_packages_gpu = []
 flatpak_packages = []
 
+
+# ======= Functions =======
+
+
+def installing(stdscr):
+
+    curses.def_prog_mode()
+    curses.endwin()
+
+    pacman_command = f"pacman -S --noconfirm {' '.join(pacman_packages + pacman_packages_gpu)}"
+    flatpak_command = f"flatpak install --assumeyes {' '.join(flatpak_packages)}"
+
+    try:
+        if len(pacman_packages) != 0 and len(pacman_packages_gpu) != 0:
+            subprocess.run(f"arch-chroot /mnt/archinstall {pacman_command}", shell=True, check=True)
+
+        if len(flatpak_packages) != 0:
+            subprocess.run(f"arch-chroot /mnt/archinstall {flatpak_command}", shell=True, check=True)
+
+        print("Packages installed successfully.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error during installation: {e}")
+
+    curses.reset_prog_mode()
+    stdscr.refresh()
+    subprocess.run("clear", shell=True, check=True)
+    print("Additions installed :3")
+    return
+
+
+# ======= Menus =======
+
+
 def menu_main(stdscr):
     global current_menu
     options = ["Yes", "No"]
@@ -31,28 +65,28 @@ def menu_main(stdscr):
 
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(options) 
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(options)
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            if selected == 0:
-                current_menu = "gpu"
-            else:
-                current_menu = "exit"
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(options)
+
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(options)
+
+            case curses.KEY_ENTER | 10 | 13:
+                current_menu = "gpu" if selected == 0 else "exit"
+
 
 def menu_gpu(stdscr):
     global current_menu, pacman_packages_gpu
 
-    # Définition des options de GPU et leurs paquets associés
     gpu_options = [
-        ("Mesa (Open Source)", False, "mesa lib32-mesa lib32-mesa"),  # Paquet pour Mesa
-        ("NVIDIA Proprietary (Recommended for NVIDIA)", False, "nvidia nvidia-utils lib32-nvidia-utils"),  # Paquet pour NVIDIA propriétaire
-        ("AMD (Open Source)", False, "xf86-video-amdgpu mesa lib32-mesa vulkan-radeon"),  # Paquet pour AMD
-        ("Intel (Open Source)", False, "xf86-video-intel mesa lib32-mesa vulkan-intel")  # Paquet pour Intel
+        ("Mesa (Open Source)", False, "mesa lib32-mesa lib32-mesa"),
+        ("NVIDIA Proprietary (Recommended for NVIDIA)", False, "nvidia nvidia-utils lib32-nvidia-utils"), 
+        ("AMD (Open Source)", False, "xf86-video-amdgpu mesa lib32-mesa vulkan-radeon"),
+        ("Intel (Open Source)", False, "xf86-video-intel mesa lib32-mesa vulkan-intel") 
     ]
     
-    curses.curs_set(0)  # Cache le curseur
+    curses.curs_set(0) 
     stdscr.clear()
     stdscr.refresh()
 
@@ -61,32 +95,32 @@ def menu_gpu(stdscr):
     while current_menu == "gpu":
         stdscr.clear()
 
-        # Header
         stdscr.addstr(0, 2, "Choose the GPU driver(s) to install", curses.A_BOLD)
         stdscr.addstr(2, 4, "Use arrow keys to navigate, space to select, Enter to confirm.")
         
-        # Afficher les options avec cases à cocher
         for idx, (option, selected_flag, _) in enumerate(gpu_options):
             style = curses.A_REVERSE if idx == selected else curses.A_NORMAL
             checkbox = "[x]" if selected_flag else "[ ]"
             stdscr.addstr(idx + 4, 4, f"{checkbox} {option}", style)
 
-        # Capturer l'entrée clavier
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(gpu_options)
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(gpu_options)
-        elif key == 32:  # Espace pour basculer la sélection
-            option, selected_flag, package = gpu_options[selected]
-            gpu_options[selected] = (option, not selected_flag, package)  # Bascule la sélection
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            # Ajouter les paquets sélectionnés dans pacman_packages
-            selected_drivers = [option for option, selected_flag, _ in gpu_options if selected_flag]
-            pacman_packages_gpu = [package for option, selected_flag, package in gpu_options if selected_flag]
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(gpu_options)
 
-            current_menu = "recommended_packages"  # Revenir au menu principal
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(gpu_options)
+
+            case 32: # space bar pressed
+                option, selected_flag, package = gpu_options[selected]
+                gpu_options[selected] = (option, not selected_flag, package)
+
+            case curses.KEY_ENTER | 10 | 13:
+                selected_drivers = [option for option, selected_flag, _ in gpu_options if selected_flag]
+                pacman_packages_gpu = [package for option, selected_flag, package in gpu_options if selected_flag]
+                current_menu = "recommended_packages"
+
 
         stdscr.refresh()
 
@@ -94,7 +128,6 @@ def menu_gpu(stdscr):
 def menu_packages(stdscr):
     global current_menu, pacman_packages
 
-    # Liste des applications recommandées avec leurs paquets correspondants
     recommended_packages = [
         ("Steam", False, "steam"),
         ("Visual Studio Code (Open Source Arch)", False, "code"),
@@ -104,10 +137,11 @@ def menu_packages(stdscr):
         ("Audacity", False, "audacity"),
         ("Chromium", False, "chromium"),
         ("Thunderbird", False, "thunderbird"),
-        ("OBS Studio", False, "obs-studio")
+        ("OBS Studio", False, "obs-studio"),
+        ("Kleopatra", False, "kleopatra")
     ]
     
-    curses.curs_set(0)  # Cache le curseur
+    curses.curs_set(0) 
     stdscr.clear()
     stdscr.refresh()
 
@@ -116,41 +150,40 @@ def menu_packages(stdscr):
     while current_menu == "recommended_packages":
         stdscr.clear()
 
-        # Header
         stdscr.addstr(0, 2, "Choose the recommended packages to install", curses.A_BOLD)
         stdscr.addstr(0, 2, "You'll be able to install more packages after reboot with \"sudo pacman -S <package>\" ", curses.A_BOLD)
         stdscr.addstr(2, 4, "Use arrow keys to navigate, space to select, Enter to confirm.")
         
-        # Afficher les options avec cases à cocher
         for idx, (option, selected_flag, _) in enumerate(recommended_packages):
             style = curses.A_REVERSE if idx == selected else curses.A_NORMAL
             checkbox = "[x]" if selected_flag else "[ ]"
             stdscr.addstr(idx + 4, 4, f"{checkbox} {option}", style)
 
-        # Capturer l'entrée clavier
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(recommended_packages)
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(recommended_packages)
-        elif key == 32:  # Espace pour basculer la sélection
-            option, selected_flag, package = recommended_packages[selected]
-            recommended_packages[selected] = (option, not selected_flag, package)  # Bascule la sélection
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            # Ajouter les paquets sélectionnés dans pacman_packages
-            selected_apps = [option for option, selected_flag, _ in recommended_packages if selected_flag]
-            pacman_packages.extend([package for option, selected_flag, package in recommended_packages if selected_flag])
-        
-            current_menu = "flatpak_packages"
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(recommended_packages)
+
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(recommended_packages)
+
+            case 32: # space bar pressed
+                option, selected_flag, package = recommended_packages[selected]
+                recommended_packages[selected] = (option, not selected_flag, package)
+
+            case curses.KEY_ENTER | 10 | 13:
+                selected_apps = [option for option, selected_flag, _ in recommended_packages if selected_flag]
+                pacman_packages.extend([package for _, selected_flag, package in recommended_packages if selected_flag])
+                current_menu = "flatpak_packages"
 
         stdscr.refresh()
+
 
 
 def menu_flatpak(stdscr):
     global current_menu, flatpak_packages
 
-    # Liste des applications Flatpak recommandées avec leurs identifiants
     flatpak_apps = [
         ("Discord", False, "com.discordapp.Discord"),
         ("GitHub Desktop", False, "io.github.shiftey.Desktop"),
@@ -160,7 +193,7 @@ def menu_flatpak(stdscr):
         ("Materialgram (Telegram client)", False, "io.github.kukuruzka165.materialgram")
     ]
 
-    curses.curs_set(0)  # Cache le curseur
+    curses.curs_set(0)
     stdscr.clear()
     stdscr.refresh()
 
@@ -169,59 +202,55 @@ def menu_flatpak(stdscr):
     while current_menu == "flatpak_packages":
         stdscr.clear()
 
-        # Header
         stdscr.addstr(0, 2, "Choose the Flatpak apps to install", curses.A_BOLD)
         stdscr.addstr(2, 4, "Use arrow keys to navigate, space to select, Enter to confirm.")
-        
-        # Afficher les options avec cases à cocher
+
         for idx, (option, selected_flag, _) in enumerate(flatpak_apps):
             style = curses.A_REVERSE if idx == selected else curses.A_NORMAL
             checkbox = "[x]" if selected_flag else "[ ]"
             stdscr.addstr(idx + 4, 4, f"{checkbox} {option}", style)
 
-        # Capturer l'entrée clavier
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(flatpak_apps)
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(flatpak_apps)
-        elif key == 32:  # Espace pour basculer la sélection
-            option, selected_flag, app = flatpak_apps[selected]
-            flatpak_apps[selected] = (option, not selected_flag, app)  # Bascule la sélection
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            # Ajouter les applications sélectionnées dans flatpak_packages
-            selected_apps = [option for option, selected_flag, _ in flatpak_apps if selected_flag]
-            flatpak_packages.extend([app for option, selected_flag, app in flatpak_apps if selected_flag])
-        
-            current_menu = "ask_install"  # Revenir au menu principal
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(flatpak_apps)
+
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(flatpak_apps)
+
+            case 32:
+                option, selected_flag, app = flatpak_apps[selected]
+                flatpak_apps[selected] = (option, not selected_flag, app)
+
+            case curses.KEY_ENTER | 10 | 13:
+                selected_apps = [option for option, selected_flag, _ in flatpak_apps if selected_flag]
+                flatpak_packages.extend([app for option, selected_flag, app in flatpak_apps if selected_flag])
+                current_menu = "ask_install"
 
         stdscr.refresh()
+
 
 
 def menu_install(stdscr):
     global current_menu, pacman_packages, flatpak_packages
 
-    curses.curs_set(0)  # Cache le curseur
+    curses.curs_set(0)
     stdscr.clear()
     stdscr.refresh()
 
-    # Contenu des paquets à afficher
     pacman_content = " ".join(pacman_packages + pacman_packages_gpu) if pacman_packages or pacman_packages_gpu else "No package selected."
     flatpak_content = " ".join(flatpak_packages) if flatpak_packages else "No Flatpak application selected."
 
-    # Afficher le contenu des paquets
     stdscr.addstr(0, 2, "The following packages will be installed:")
     stdscr.addstr(2, 2, f"Pacman: {pacman_content}")
     stdscr.addstr(3, 2, f"Flatpak: {flatpak_content}")
 
-    # Demander si l'utilisateur veut installer
     stdscr.addstr(5, 2, "Do you want to install these packages?", curses.A_BOLD)
 
     options = ["No / Reconfigure", "Yes"]
     selected = 0
 
-    # Affichage des boutons "Oui" et "Non"
     while current_menu == "ask_install":
         for idx, option in enumerate(options):
             style = curses.A_REVERSE if idx == selected else curses.A_NORMAL
@@ -229,68 +258,49 @@ def menu_install(stdscr):
 
         key = stdscr.getch()
 
-        if key == curses.KEY_UP:
-            selected = (selected - 1) % len(options)
-        elif key == curses.KEY_DOWN:
-            selected = (selected + 1) % len(options)
-        elif key in [curses.KEY_ENTER, 10, 13]:
-            if selected == 1:  # Si l'utilisateur choisit "Oui"
-                current_menu = "installing"
-            else:
-                current_menu = "main"
+        match key:
+            case curses.KEY_UP:
+                selected = (selected - 1) % len(options)
+
+            case curses.KEY_DOWN:
+                selected = (selected + 1) % len(options)
+
+            case curses.KEY_ENTER | 10 | 13:
+                current_menu = "installing" if selected == 1 else "main"
 
         stdscr.refresh()
 
 
-def installing(stdscr):
-
-    curses.def_prog_mode()
-    curses.endwin()
-
-    # Commande d'installation pour pacman
-    pacman_command = f"pacman -S --noconfirm {' '.join(pacman_packages + pacman_packages_gpu)}"
-    # Commande d'installation pour flatpak
-    flatpak_command = f"flatpak install --assumeyes {' '.join(flatpak_packages)}"
-
-    # Exécution des commandes dans le chroot
-    try:
-    # Installation des paquets Pacman dans le chroot
-        if len(pacman_packages) != 0 and len(pacman_packages_gpu) != 0:
-            subprocess.run(f"arch-chroot /mnt/archinstall {pacman_command}", shell=True, check=True)
-
-        if len(flatpak_packages) != 0:
-            subprocess.run(f"arch-chroot /mnt/archinstall {flatpak_command}", shell=True, check=True)
-
-        print("Packages installed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error during installation: {e}")
-    curses.reset_prog_mode()
-    stdscr.refresh()
-    subprocess.run("clear", shell=True, check=True)
-    print("Additions installed :3")
-    return
+# ======= Main Loop =======
 
 
 def main(stdscr):
     global current_menu
 
     while True:
-        if current_menu == "main":
-            menu_main(stdscr)
-        elif current_menu == "gpu":
-            menu_gpu(stdscr)
-        elif current_menu == "recommended_packages":
-            menu_packages(stdscr)
-        elif current_menu == "flatpak_packages":
-            menu_flatpak(stdscr)
-        elif current_menu == "ask_install":
-            menu_install(stdscr)
-        elif current_menu == "exit":
-            return
-        elif current_menu == "installing":
-            installing(stdscr)
-            return
+        match current_menu:
+            case "main":
+                menu_main(stdscr)
 
-            
+            case "gpu":
+                menu_gpu(stdscr)
+
+            case "recommended_packages":
+                menu_packages(stdscr)
+
+            case "flatpak_packages":
+                menu_flatpak(stdscr)
+
+            case "ask_install":
+                menu_install(stdscr)
+
+            case "installing":
+                installing(stdscr)
+                return
+                
+            case "exit":
+                return
+
+
 
 curses.wrapper(main)
