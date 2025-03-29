@@ -1,0 +1,2 @@
+[org/gnome/shell]
+enabled-extensions=['tilingshell@ferrarodomenico.com', 'dash-to-dock@micxgx.gmail.com', 'arch-update@RaphaelRochet', 'CoverflowAltTab@palatis.blogspot.com', 'system-monitor@gnome-shell-extensions.gcampax.github.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'places-menu@gnome-shell-extensions.gcampax.github.com', 'apps-menu@gnome-shell-extensions.gcampax.github.com' ]

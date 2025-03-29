@@ -74,8 +74,8 @@
     "gnome-text-editor", "totem", "gnome-system-monitor", "gnome-logs", "gnome-software", 
     "loupe", "gnome-shell-extensions", "nautilus", "gnome-font-viewer", "baobab", 
     "gnome-disk-utility", "gnome-clocks", "flatpak", "nano", "wget", "wireless_tools",
-    "wpa_supplicant", "smartmontools", "gnome-tweaks", "bluez", "bluez-utils", "cronie",
-    "timeshift", "zsh", "curl"
+    "wpa_supplicant", "smartmontools", "gnome-tweaks", "bluez", "bluez-utils", "cronie", "python-pipx",
+    "timeshift", "zsh", "curl", "pacman-contrib", "gnome-menus"
     ],
     "parallel downloads": 0,
     "profile_config": null,
