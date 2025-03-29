@@ -1,0 +1,4 @@
+1743272755.9002013 ['/usr/bin/systemd-detect-virt']
+1743272755.905486 ['/usr/bin/systemd-detect-virt']
+1743272755.909909 ['/usr/bin/lspci']
+1743272755.9298546 ['/usr/bin/lsblk', '--json', '--bytes', '--output', 'name,path,pkname,log-sec,size,pttype,ptuuid,rota,tran,partn,partuuid,parttype,uuid,fstype,fsver,fsavail,fsuse%,type,mountpoint,mountpoints,fsroots']

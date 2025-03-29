@@ -101,6 +101,9 @@ def menu_wifi(stdscr):
 
         key = stdscr.getch()
 
+        main_button = len(networks) - 1
+        back_button = len(networks) - 2
+
         match key:
             case curses.KEY_UP:
                 selected = (selected - 1) % len(networks)
@@ -109,13 +112,14 @@ def menu_wifi(stdscr):
                 selected = (selected + 1) % len(networks) 
 
             case curses.KEY_ENTER | 10 | 13: 
-                match selected:
-                    case len(networks) - 1:
-                        current_menu = "main" # button return to installer
-                    case len(networks) - 2:
-                        current_menu = "interfaces" # button "back"
-                    case _:
-                        menu_password(stdscr, networks[selected])
+                if selected == main_button:
+                    current_menu = "main" # button return to installer
+
+                elif selected == back_button:
+                    current_menu = "interfaces" # button "back"
+
+                else:
+                    menu_password(stdscr, networks[selected])
 
 
 def menu_password(stdscr, ssid, wrong_password=False):
@@ -162,6 +166,8 @@ def menu_interfaces(stdscr):
 
         key = stdscr.getch()
 
+        main_button = len(buttons) - 1
+
         match key:
             case curses.KEY_UP:
                 selected = (selected - 1) % len(buttons)
@@ -170,13 +176,12 @@ def menu_interfaces(stdscr):
                 selected = (selected + 1) % len(buttons)
 
             case curses.KEY_ENTER | 10 | 13:
-                match selected:
-                    case len(buttons) - 1:
-                        current_menu = "main"
-
-                    case _:
-                        interface = buttons[selected] 
-                        current_menu = "wifi"
+                if selected == main_button:
+                    current_menu = "main"
+                
+                else:
+                    interface = buttons[selected] 
+                    current_menu = "wifi"
 
 
 
@@ -206,6 +211,9 @@ def menu_main(stdscr):
 
         key = stdscr.getch()
 
+        exit_button = len(options) - 1
+        install_button = len(options) - 2
+
         match key:
             case curses.KEY_UP:
                 selected = (selected - 1) % len(options)
@@ -214,18 +222,17 @@ def menu_main(stdscr):
                 selected = (selected + 1) % len(options)
 
             case curses.KEY_ENTER | 10 | 13:
-                match selected:
-                    case len(options) - 1:
-                        current_menu = "exit"
+                if selected == exit_button:
+                    current_menu = "exit"
 
-                    case len(options) - 2:
-                        curses.curs_set(0)
-                        stdscr.clear()
-                        stdscr.refresh()
-                        current_menu = "install"
+                elif selected == install_button:
+                    curses.curs_set(0)
+                    stdscr.clear()
+                    stdscr.refresh()
+                    current_menu = "install"
 
-                    case _:
-                        current_menu = "interfaces"
+                else:
+                    current_menu = "interfaces"
 
 
 # ======= Main Loop =======
