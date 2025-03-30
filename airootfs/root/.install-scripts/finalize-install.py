@@ -185,6 +185,7 @@ def menu_flatpak(stdscr):
     global current_menu, flatpak_packages
 
     flatpak_apps = [
+        ("Flatseal (Manage flatpak permissions)", False, "com.github.tchx84.Flatseal")
         ("Discord", False, "com.discordapp.Discord"),
         ("GitHub Desktop", False, "io.github.shiftey.Desktop"),
         ("Brave Browser", False, "com.brave.Browser"),
