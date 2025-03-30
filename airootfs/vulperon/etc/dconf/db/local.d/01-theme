@@ -1,2 +1,6 @@
 [org/gnome/desktop/interface]
 color-scheme='prefer-dark'
+gtk-theme='Colloid-Dark'
+
+[org/gnome/shell/extensions/user-theme]
+name='Colloid-Dark'
