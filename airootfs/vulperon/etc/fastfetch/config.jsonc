@@ -1,36 +1,120 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "source": "/etc/fastfetch/vulperon.ascii"
+    "source": "/etc/fastfetch/vulperon.ascii",
+    "height": 18
   },
   "display": {
-    "size": {
-      "ndigits": 0,
-      "maxPrefix": "MB"
-    }
+    "separator": " : "
   },
   "modules": [
-    "title",
-    "separator",
-    "os",
-    "host",
-    "kernel",
-    "uptime",
-    "packages",
-    "shell",
-    "display",
-    "de",
-    "wm",
-    "wmtheme",
-    "icons",
-    "terminal",
-    "cpu",
-    "gpu",
-    "memory",
-    "swap",
-    "disk",
-    "localip",
+    {
+      "type": "custom",
+      "format": ""
+    },
+    {
+      "type": "custom",
+      "format": "  \u001b[36mWoof !"
+    },
+    {
+      "type": "custom",
+      "format": ""
+    },
+    {
+      "type": "os",
+      "key": "   OS",
+      "keyColor": "38;5;208" 
+    },
+    {
+      "type": "kernel",
+      "key": "   Kernel",
+      "keyColor": "38;5;208"  // White
+    },
+    {
+      "type": "packages",
+      "key": "  󰏗 Packages",
+      "keyColor": "38;5;208"  // Keeping the same
+    },
+    {
+      "type": "display",
+      "key": "  󱍜 Display",
+      "keyColor": "38;5;208"  // Random: Bright Orange
+    },
+    {
+      "type": "wm",
+      "key": "   WM",
+      "keyColor": "38;5;208"  // Light Blue
+    },
+    {
+      "type": "terminal",
+      "key": "   Terminal",
+      "keyColor": "38;5;208"  // Grey
+    },
+    {
+      "type": "media",
+      "key": "  󰝚  Music",
+      "keyColor": "38;5;208"
+    },
+
+     {
+            "type": "command",
+            "key": "  󱦟 OS Age ",
+            "keyColor": "38;5;208",
+            "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
+        },
+
+     {
+            "type": "uptime",
+            "key": "   Uptime",
+            "keyColor": "38;5;208",
+        },
+{
+  "type": "battery",
+  "key": "   Battery",
+  "keyColor": "38;5;208"  // Light Yellow
+},
     "break",
-    "colors"
+    {
+      "type": "title",
+      "key": "   User",
+      "keyColor": "38;5;208"  // Black
+    },
+    {
+      "type": "custom",
+      "format": ""
+    },
+    {
+      "type": "cpu",
+      "format": "{1}",
+      "key": "   CPU",
+      "keyColor": "38;5;208"  // Bright Green
+    },
+    {
+      "type": "gpu",
+      "format": "{2}",
+      "key": "   GPU",
+      "keyColor": "38;5;208"  // Yellow
+    },
+    {
+      "type": "gpu",
+      "format": "{3}",
+      "key": "   GPU Driver",
+      "keyColor": "38;5;208"  // Cyan
+    },
+    {
+      "type": "memory",
+      "key": "  🖪 Memory",
+      "keyColor": "38;5;208"  // Pinkish Purple
+    },
+    {
+      "type": "custom",
+      "format": ""
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "  \u001b[90m  \u001b[31m  \u001b[32m  \u001b[33m  \u001b[34m  \u001b[35m  \u001b[36m  \u001b[37m "
+    },
+    "break"
   ]
 }
