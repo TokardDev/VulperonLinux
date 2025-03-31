@@ -1,0 +1,120 @@
+[2025-03-31 07:48:21] - WARNING - Not enough permission to place log file at /var/log/archinstall/install.log, creating it in /home/tokard/Documents/TokArch/vulperonv3/install.log instead
+[2025-03-31 07:48:21] - DEBUG - Hardware model detected: HP HP EliteBook 640 14 inch G10 Notebook PC; UEFI mode: True
+[2025-03-31 07:48:21] - DEBUG - Processor model detected: 13th Gen Intel(R) Core(TM) i5-1345U
+[2025-03-31 07:48:21] - DEBUG - Memory statistics: 10805800 available out of 16007280 total installed
+[2025-03-31 07:48:21] - DEBUG - Could not detect virtual system: ['/usr/bin/systemd-detect-virt'] exited with abnormal exit code [1]: none
+
+[2025-03-31 07:48:21] - DEBUG - System is not running in a VM: ['/usr/bin/systemd-detect-virt'] exited with abnormal exit code [1]: none
+
+[2025-03-31 07:48:21] - DEBUG - Virtualization detected: None; is VM: False
+[2025-03-31 07:48:21] - DEBUG - Graphics devices detected: dict_keys(['Intel Corporation Raptor Lake-P [UHD Graphics] (rev 04)'])
+[2025-03-31 07:48:21] - DEBUG - Disk states before installing:
+{
+    "blockdevices": [
+        {
+            "name": "nvme0n1",
+            "path": "/dev/nvme0n1",
+            "pkname": null,
+            "log_sec": 512,
+            "size": "244198 MiB",
+            "pttype": "gpt",
+            "ptuuid": "c531731c-49be-4609-a756-6390b640f9c4",
+            "rota": false,
+            "tran": "nvme",
+            "partn": null,
+            "partuuid": null,
+            "parttype": null,
+            "uuid": null,
+            "fstype": null,
+            "fsver": null,
+            "fsavail": null,
+            "fsuse_percentage": null,
+            "type": "disk",
+            "mountpoint": null,
+            "mountpoints": [],
+            "fsroots": [],
+            "children": [
+                {
+                    "name": "nvme0n1p1",
+                    "path": "/dev/nvme0n1p1",
+                    "pkname": "nvme0n1",
+                    "log_sec": 512,
+                    "size": "512 MiB",
+                    "pttype": "gpt",
+                    "ptuuid": "c531731c-49be-4609-a756-6390b640f9c4",
+                    "rota": false,
+                    "tran": "nvme",
+                    "partn": 1,
+                    "partuuid": "d642458b-c01a-4639-9cd9-12a5a45d3040",
+                    "parttype": "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+                    "uuid": "9B8B-D711",
+                    "fstype": "vfat",
+                    "fsver": "FAT32",
+                    "fsavail": null,
+                    "fsuse_percentage": null,
+                    "type": "part",
+                    "mountpoint": null,
+                    "mountpoints": [],
+                    "fsroots": [],
+                    "children": []
+                },
+                {
+                    "name": "nvme0n1p2",
+                    "path": "/dev/nvme0n1p2",
+                    "pkname": "nvme0n1",
+                    "log_sec": 512,
+                    "size": "1024 MiB",
+                    "pttype": "gpt",
+                    "ptuuid": "c531731c-49be-4609-a756-6390b640f9c4",
+                    "rota": false,
+                    "tran": "nvme",
+                    "partn": 2,
+                    "partuuid": "4a747744-e3aa-4e5d-b04a-eff8f0b44eae",
+                    "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+                    "uuid": "523b28c4-8931-4279-b0a9-74225f46da63",
+                    "fstype": "ext4",
+                    "fsver": "1.0",
+                    "fsavail": 751874048,
+                    "fsuse_percentage": "19%",
+                    "type": "part",
+                    "mountpoint": "/boot",
+                    "mountpoints": [
+                        "/boot"
+                    ],
+                    "fsroots": [
+                        "/"
+                    ],
+                    "children": []
+                },
+                {
+                    "name": "nvme0n1p3",
+                    "path": "/dev/nvme0n1p3",
+                    "pkname": "nvme0n1",
+                    "log_sec": 512,
+                    "size": "242661 MiB",
+                    "pttype": "gpt",
+                    "ptuuid": "c531731c-49be-4609-a756-6390b640f9c4",
+                    "rota": false,
+                    "tran": "nvme",
+                    "partn": 3,
+                    "partuuid": "ca623c0d-d335-4313-b316-ea8bc029045b",
+                    "parttype": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+                    "uuid": "e0c15d53-c009-4899-8c6b-6c77b42f6950",
+                    "fstype": "ext4",
+                    "fsver": "1.0",
+                    "fsavail": 50372145152,
+                    "fsuse_percentage": "75%",
+                    "type": "part",
+                    "mountpoint": "/",
+                    "mountpoints": [
+                        "/"
+                    ],
+                    "fsroots": [
+                        "/"
+                    ],
+                    "children": []
+                }
+            ]
+        }
+    ]
+}

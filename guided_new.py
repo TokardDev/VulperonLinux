@@ -41,7 +41,7 @@ def ask_user_questions() -> None:
 		global_menu.set_enabled('network_config', False)
 		global_menu.set_enabled('packages', False)
 		global_menu.set_enabled('ntp', False)
-		
+
 		global_menu.run()
 
 

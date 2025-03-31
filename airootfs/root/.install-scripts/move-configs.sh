@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cp -r -f /vulperon/* /mnt/archinstall/
-rm -r /mnt/archinstall/usr/share/pixmaps/archlinux*
+cp -r -f /vulperon/* /mnt/
+rm -r /mnt/usr/share/pixmaps/archlinux*
 
 # Check if the move was successful
 if [ $? -eq 0 ]; then
