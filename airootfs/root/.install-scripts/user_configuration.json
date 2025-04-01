@@ -73,8 +73,8 @@
     "gnome-keyring", "xdg-user-dirs-gtk", "gnome-calculator", "gnome-calendar", 
     "gnome-text-editor", "totem", "gnome-system-monitor", "gnome-logs", "gnome-software", 
     "loupe", "gnome-shell-extensions", "nautilus", "gnome-font-viewer", "baobab", "plymouth",
-    "gnome-disk-utility", "gnome-clocks", "flatpak", "nano", "wget", "wireless_tools", "otf-geist-mono-nerd",
-    "wpa_supplicant", "smartmontools", "gnome-tweaks", "bluez", "bluez-utils", "cronie", "python-pipx", "fastfetch",
+    "gnome-disk-utility", "gnome-clocks", "flatpak", "nano", "wget", "wireless_tools", "ttf-meslo-nerd",
+    "wpa_supplicant", "smartmontools", "gnome-tweaks", "bluez", "bluez-utils", "cronie", "python-pipx", "fastfetch", "base-devel",
     "timeshift", "zsh", "curl", "pacman-contrib", "gnome-menus", "git", "gnome-themes-extra", "gtk-engine-murrine", "sassc"
     ],
     "parallel downloads": 0,
