@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXTENSIONS_LIST=("7065" "307" "1010" "97")
+EXTENSIONS_LIST=("7065" "307" "1010" "97" "517")
 
 VERSION_GNOME=$(gnome-shell --version | awk '{print $3}' | cut -d'.' -f1)
 

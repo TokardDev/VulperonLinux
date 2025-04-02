@@ -40,4 +40,6 @@ for user in $(ls /home); do
     chown "$user:$user" "$user_zshrc"
 done
 
+wget -qO- https://git.io/papirus-icon-theme-install | sh
+
 echo "Installation et configuration terminées !"
