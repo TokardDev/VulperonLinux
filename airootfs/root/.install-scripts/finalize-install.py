@@ -14,6 +14,7 @@ flatpak_packages = []
 
 
 def installing(stdscr):
+    global flatpak_packages, pacman_packages, pacman_packages_gpu
 
     curses.def_prog_mode()
     curses.endwin()
@@ -23,10 +24,10 @@ def installing(stdscr):
 
     try:
         if len(pacman_packages) != 0 and len(pacman_packages_gpu) != 0:
-            subprocess.run(f"arch-chroot /mnt/archinstall {pacman_command}", shell=True, check=True)
+            subprocess.run(f"arch-chroot /mnt {pacman_command}", shell=True, check=True)
 
         if len(flatpak_packages) != 0:
-            subprocess.run(f"arch-chroot /mnt/archinstall {flatpak_command}", shell=True, check=True)
+            subprocess.run(f"arch-chroot /mnt {flatpak_command}", shell=True, check=True)
 
         print("Packages installed successfully.")
 
@@ -185,7 +186,7 @@ def menu_flatpak(stdscr):
     global current_menu, flatpak_packages
 
     flatpak_apps = [
-        ("Flatseal (Manage flatpak permissions)", False, "com.github.tchx84.Flatseal")
+        ("Flatseal (Manage flatpak permissions)", False, "com.github.tchx84.Flatseal"),
         ("Discord", False, "com.discordapp.Discord"),
         ("GitHub Desktop", False, "io.github.shiftey.Desktop"),
         ("Brave Browser", False, "com.brave.Browser"),

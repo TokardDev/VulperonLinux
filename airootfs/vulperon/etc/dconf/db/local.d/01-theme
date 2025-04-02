@@ -4,3 +4,6 @@ gtk-theme='Colloid-Dark'
 
 [org/gnome/shell/extensions/user-theme]
 name='Colloid-Dark'
+
+[org/gnome/desktop/interface]
+icon-theme='Papirus-Dark'

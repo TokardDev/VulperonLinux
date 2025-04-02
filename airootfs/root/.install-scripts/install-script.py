@@ -51,7 +51,7 @@ def run_archinstall(stdscr):
         "--script", "vulperon-archiso",
         "--config", "/root/.install-scripts/user_configuration.json",
         "--creds", "/root/.install-scripts/user_credentials.json",
-        "--mount-point", "/mnt/archinstall"
+        "--mount-point", "/mnt"
     ])
     subprocess.run(["/root/.install-scripts/move-configs.sh"]) # move files to new system
     subprocess.run(["/root/.install-scripts/post-install.sh"]) # execute scripts in chroot, maybe can be merged with above script ? 
