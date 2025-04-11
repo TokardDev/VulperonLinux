@@ -32,4 +32,5 @@ file_permissions=(
   ["/vulperon/root/download-extensions.sh"]="0:0:755"
   ["/vulperon/root/install-theme.sh"]="0:0:755"
   ["/root/.install-scripts/finalize-install.py"]="0:0:755"
+  ["/root/vulperon-repo"]="0:0:755"
 )
